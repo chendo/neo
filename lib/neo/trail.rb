@@ -31,7 +31,7 @@ class Trail
   attr_accessor :x, :y, :speed, :length, :color, :highlight_color, :pattern, :direction
   
   
-  def initialize(window, *args)
+  def initialize(window, options = {})
     @window = window
     @glyphs = []
     
@@ -45,14 +45,27 @@ class Trail
       :direction => 2
     }
     
-    defaults.merge(args).each do |k, v|
+    defaults.merge(options).each do |k, v|
       self.send("#{k}=", v)
     end
     
     set_starting_position
+    set_movement_offsets
     
   end
   
-
+  private
+  
+  def set_starting_position
+    case direction
+    when 0
+      @y = @window.height
+      @x = rand(@window.width / 20) * 20
+    when 1
+      @x = 0
+      @y = rand(@window.width / 20) * 20
+  end
+  
+  
   
 end
