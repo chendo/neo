@@ -1,11 +1,13 @@
 class Window < Gosu::Window
-  attr_accessor :glyphs, :block
-  def initialize
-    super(800, 600, false)
+  attr_accessor :glyphs, :block, :width, :height
+  def initialize(width = 800, height = 600, fullscreen = false, scale = 0.15)
+    super(width, height, fullscreen)
+    @width = width
+    @height = height
     self.caption = "Neo"
     load_glyphs
     @trails = []
-    25.times { spawn }
+    40.times { spawn }
   end
   
   def load_glyphs
@@ -13,7 +15,6 @@ class Window < Gosu::Window
     Dir.glob("glyphs/*.png").each do |file|
       @glyphs << Gosu::Image.new(self, file)
     end
-    p @glyphs
   end
   
   def update
