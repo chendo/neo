@@ -1,57 +1,58 @@
 class Trail
-  attr_accessor :x, :y, :speed, :length
-  def initialize(window, speed = rand(4) + 0.3, length = rand(6) + 3)
+  
+  # Attributes:
+  #   x: current horizontal position. if nil, trail is placed randomly out of frame
+  #   y: current vertical position. if nil, trail is placed randomly out of frame
+  #   speed: larger numbers go faster. default: random
+  #   length: length of the non-fading portion of the trail. default: random
+  #   pattern:
+  #     an array of boolean variables that define the highlighted pattern.
+  #     the array maps to the head of the trail, so
+  #     [t, f, f, t, f] on a trail of 6 would give on a downwards trail
+  #     -
+  #     -
+  #     #
+  #     -
+  #     -
+  #     # <- head
+  #     default: [t], only the head is highlighted
+  #   color:
+  #     color of the trail. takes a 32bit integer in the format 0xAARRGGBB
+  #     or 3 or 4 element array in the format [R, G, B] or [A, R, G, B]
+  #     A assumed to be 255 in the 3 element case
+  #     default: [0, 255, 0]
+  #   highlight_color: see color. default: [255, 255, 255]
+  #   direction: the direction the trail is heading.
+  #       0
+  #     3 + 1
+  #       2
+  #     default: 2
+  
+  attr_accessor :x, :y, :speed, :length, :color, :highlight_color, :pattern, :direction
+  
+  
+  def initialize(window, *args)
     @window = window
-    @z_order = rand(3)
     @glyphs = []
-    @x = rand(40) * 20 #rand(700) - 30
-    @y = -100
-    @speed = speed
-    @t = speed
-    @length = length
-    add_glyph
-  end
-  
-  def draw
-    @t -= 1
-    @glyphs.each do |g|
-      g.draw
-      if g.opacity <= 0
-        @glyphs.delete(g)
-      end
+    
+    defaults = {
+      :x => nil,
+      :y => nil,
+      :speed => (2..8),
+      :length => (3..10),
+      :color => [0, 255, 0],
+      :pattern => [true],
+      :direction => 2
+    }
+    
+    defaults.merge(args).each do |k, v|
+      self.send("#{k}=", v)
     end
-        
-    if @t <= 0
-      @t = @speed
-      @y += 20
-      if visible?
-        add_glyph
-      else
-        puts "not visible"
-        @window.expire_trail(self)
-      end
-    end
+    
+    set_starting_position
+    
   end
   
-  def head_visible?
-    @y < @window.height
-  end
-  
-  
-  def visible?
-    @glyphs.any? { |g| g.visible? }
-  end
-  
-  
-  def add_glyph
-    @glyphs.last.white = false unless @glyphs.empty?
-    @glyphs << Glyph.new(@window, self, @x, @y)
-    if @glyphs.size > @length
-      @glyphs[@glyphs.size - @length].fading = true
-    end
-  end
-  
-  
-  
+
   
 end
