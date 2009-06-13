@@ -1,6 +1,6 @@
 class Window < Gosu::Window
   attr_accessor :glyphs, :block, :pixel_width, :pixel_height, :glyph_width, :glyph_height, :scale
-  def initialize(width = 800, height = 600, fullscreen = false, scale = 0.10)
+  def initialize(neo, width = 800, height = 600, fullscreen = false, scale = 0.15)
     super(width, height, fullscreen)
     
     
@@ -9,16 +9,16 @@ class Window < Gosu::Window
     @scale = scale
     @glyph_height = 128
     @glyph_width = 128
+    @neo = neo
     
     self.caption = "Neo"
     load_glyphs
     @trails = []
-    40.times { spawn }
   end
   
   def load_glyphs
     @glyphs = []
-    Dir.glob("glyphs/*.png").each do |file|
+    Dir.glob(File.dirname(__FILE__) + "/../../glyphs/*.png").each do |file|
       @glyphs << Gosu::Image.new(self, file)
     end
   end
@@ -37,6 +37,7 @@ class Window < Gosu::Window
   
   
   def draw
+    spawn if rand(20) == 1
     @trails.each do |trail|
       trail.draw
     end
@@ -47,10 +48,9 @@ class Window < Gosu::Window
     spawn
   end
   
-  
-  
-  def spawn
-    @trails << Trail.new(self, :pattern => [true, false, false, true], :length => 4..15, :direction => [:up, :down, :left, :right].rand, :color => [rand(255), rand(255), rand(255)])
+  def spawn(&block)
+    @spawn = block if block_given?
+    @trails << instance_eval(&@spawn) if @neo.max_trails > @trails.size
   end
   
   

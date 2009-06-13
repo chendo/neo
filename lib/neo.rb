@@ -13,10 +13,17 @@ class Neo
   VERSION = '0.0.1'
   
   class << self
+    attr_accessor :max_trails
+    
     def init
-      @window = Window.new
+      @window = Window.new(self)
     end
     
+    def method_missing(method, *args, &block)
+      @window.send(method, *args, &block)
+    end
+    
+
     def run(&block)
       @window.block = block
       @window.show

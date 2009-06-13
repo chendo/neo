@@ -75,7 +75,9 @@ describe Trail do
           :color => [0, 200, 0],
           :highlight_color => [255, 0, 0],
           :pattern => [true, false, true, true],
-          :direction => :up)
+          :direction => :up,
+          :x => 3,
+          :y => 9)
       end
       
       it "set the passed through values" do
@@ -85,6 +87,8 @@ describe Trail do
         @trail.highlight_color.should == [255, 0, 0]
         @trail.pattern.should == [true, false, true, true]
         @trail.direction.should == :up
+        @trail.x.should == 3
+        @trail.y.should == 9
       end
       
       it "should set the movement delta" do

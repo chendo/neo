@@ -120,17 +120,17 @@ class Trail
   def set_starting_position
     case @direction
     when :up
-      @x = rand(@window.width)
-      @y = @window.height
+      @x ||= rand(@window.width)
+      @y ||= @window.height
     when :right
-      @x = 0
-      @y = rand(@window.height)
+      @x ||= 0
+      @y ||= rand(@window.height)
     when :down
-      @x = rand(@window.width)
-      @y = 0
+      @x ||= rand(@window.width)
+      @y ||= 0
     when :left
-      @x = @window.width
-      @y = rand(@window.height)
+      @x ||= @window.width
+      @y ||= rand(@window.height)
     end
   end
   
