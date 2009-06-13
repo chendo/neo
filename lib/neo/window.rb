@@ -50,7 +50,7 @@ class Window < Gosu::Window
   
   
   def spawn
-    @trails << Trail.new(self, :pattern => [true, false, false, true], :length => 4..15)
+    @trails << Trail.new(self, :pattern => [true, false, false, true], :length => 4..15, :direction => [:up, :down, :left, :right].rand, :color => [rand(255), rand(255), rand(255)])
   end
   
   

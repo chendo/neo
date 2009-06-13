@@ -32,15 +32,14 @@ class Glyph
   end
   
   def off_screen?
-    x > @window.width || x < 0 || y > @window.height || y < 0
+    x > @window.width || x < -1 || y > @window.height || y < -1
   end
   
   
   def scale
     @scale ||= @window.scale
   end
-  
-  
+
   def visible?
     @opacity > 0
   end
