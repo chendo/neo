@@ -77,6 +77,23 @@ describe Glyph do
           @glyph.draw
         end
       end
+      
+      describe "when onscreen" do
+        before do
+          @goal_x = @glyph.x = rand(@window.width)
+          @goal_y = @glyph.y = rand(@window.height)
+        end
+        
+        it "should draw at those coordinates" do
+          @glyph.glyph = mock
+          @glyph.glyph.expects(:draw).once
+          @glyph.stubs(:x_pixels).once.returns(@goal_x)
+          @glyph.stubs(:y_pixels).once.returns(@goal_y)
+          
+          @glyph.draw
+        end
+          
+      end
     end
   end
 end
