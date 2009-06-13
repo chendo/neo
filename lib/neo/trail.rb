@@ -46,6 +46,8 @@ class Trail
       self.send("#{k}=", v)
     end
     
+    @pattern ||= []
+    
 
     raise InvalidDirection unless [:up, :down, :left, :right].include? @direction
     
@@ -65,6 +67,7 @@ class Trail
     else
       @length = value
     end
+    @length = 1 if @length == 0
   end
   
   def speed=(value)
