@@ -15,6 +15,6 @@ Spec::Runner.configure do |config|
   config.mock_with :mocha
 end
 
-def p(obj)
-  puts obj.inspect.gsub('<', '&lt;').gsub('>', '&gt;')
+def p(*objs)
+  puts objs.map { |o| inspect.gsub('<', '&lt;').gsub('>', '&gt;') }.join("\n")
 end
