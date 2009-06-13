@@ -1,5 +1,5 @@
 class Glyph
-  attr_accessor :opacity, :white, :fading
+  attr_accessor :opacity, :highlighted, :fading
   def initialize(window, trail, x, y)
     @x = x
     @y = y
@@ -20,6 +20,16 @@ class Glyph
   def visible?
     @y < @window.height && @opacity > 0
   end
+  
+  def fading?
+    @fading || false
+  end
+  
+  def highlighted?
+    @highlighted || false
+  end
+  
+  
   
   
   def change_glyph

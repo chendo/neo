@@ -1,9 +1,15 @@
 class Window < Gosu::Window
-  attr_accessor :glyphs, :block, :width, :height
+  attr_accessor :glyphs, :block, :pixel_width, :pixel_height
   def initialize(width = 800, height = 600, fullscreen = false, scale = 0.15)
     super(width, height, fullscreen)
-    @width = width
-    @height = height
+    
+    
+    @pixel_width = width
+    @pixel_height = height
+    @scale = scale
+    @glyph_height = 128
+    @glyph_width = 128
+    
     self.caption = "Neo"
     load_glyphs
     @trails = []
@@ -20,6 +26,15 @@ class Window < Gosu::Window
   def update
     
   end
+  
+  def width
+    @width ||= @pixel_width / (@glyph_width * @scale)
+  end
+  
+  def height
+    @height ||= @pixel_height / (@glyph_height * @scale)
+  end
+  
   
   def draw
     @trails.each do |trail|

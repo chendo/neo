@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 require 'rubygems'
 require 'gosu'
+require 'neo/extensions'
 require 'neo/window'
 require 'neo/trail'
 require 'neo/glyph'
