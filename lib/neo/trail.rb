@@ -23,11 +23,7 @@ class Trail
   #     A assumed to be 255 in the 3 element case
   #     default: [0, 255, 0]
   #   highlight_color: see color. default: [255, 255, 255]
-  #   direction: the direction the trail is heading.
-  #       0
-  #     3 + 1
-  #       2
-  #     default: 2
+  #   direction: the direction the trail is heading. :up, :down, :left, :right. default: :down
   
   attr_accessor :x, :y, :speed, :length, :color, :highlight_color, :pattern, :direction, :x_delta, :y_delta, :glyphs
   
@@ -42,16 +38,20 @@ class Trail
       :length => (3..10),
       :color => [0, 255, 0],
       :pattern => [true],
-      :direction => 2
+      :direction => :down
     }
     
     defaults.merge(options).each do |k, v|
       self.send("#{k}=", v)
     end
+    
+
+    raise InvalidDirection unless [:up, :down, :left, :right].include? @direction
+    
     @padded_pattern = @pattern + [false]
     
     set_starting_position
-    set_movement_offsets
+    set_movement_deltas
     
     @t = 100
     
@@ -77,61 +77,69 @@ class Trail
   def draw
     @t -= @speed
     
-    @glyphs.map do |g|
+    @glyphs.each do |g|
       g.draw
-      @glyphs.delete(g) if !g.visible?
     end
-      
+    
+    @glyphs.reject! { |g| !g.visible? }
+    
+    return if @t > 0
+    
+    update_position
+    add_glyph
   end
+  
+  def update_position
+    @x += @x_delta
+    @y += @y_delta
+  end
+  
+  
   
   def add_glyph
     if @glyphs.reject { |g| g.fading? }.size < @length
-      @glyphs << Glyph.new(@window, self, @x, @y)
+      @glyphs.unshift Glyph.new(@window, self, @x, @y)
       apply_pattern
     end
   end
   
   def apply_pattern
-    @glyphs.reverse[0, @padded_pattern.length].zip(@padded_pattern) do |g, h|
+    @glyphs[0, @padded_pattern.length].zip(@padded_pattern) do |g, h|
       g.highlighted = h
     end
   end
   
-  
-  
-  
-  
   private
   
   def set_starting_position
-    case direction
-    when 0 # up
+    case @direction
+    when :up
       @x = rand(@window.width)
       @y = @window.height
-    when 1 # left
+    when :right
       @x = 0
       @y = rand(@window.height)
-    when 2 # down
+    when :down
       @x = rand(@window.width)
       @y = 0
-    when 3 # right
+    when :left
       @x = @window.width
       @y = rand(@window.height)
     end
   end
   
-  def set_movement_offsets
-    case direction
-    when 0 # up
+  def set_movement_deltas
+    case @direction
+    when :up
       @x_delta = 0
       @y_delta = -1
-    when 1 # left
+    when :left
       @x_delta = -1
       @y_delta = 0
-    when 2 # down
+    when :down
       @x_delta = 0
       @y_delta = 1
-    when 3 # right
+    when :right
       @x_delta = 1
       @y_delta = 0
     end
@@ -141,3 +149,5 @@ class Trail
   
   
 end
+
+class Trail::InvalidDirection < Exception; end
