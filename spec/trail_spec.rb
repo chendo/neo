@@ -57,7 +57,7 @@ describe Trail do
         end
         
         it "should set a random speed" do
-          (2..8).should include(@trail.speed)
+          (2..14).should include(@trail.speed)
         end
         
         it "should add a glyph" do
@@ -66,7 +66,7 @@ describe Trail do
       end
     end
     
-    describe "with arguments" do
+    describe "with valid arguments" do
       before do
         @trail = Trail.new(
           @window,
@@ -216,6 +216,16 @@ describe Trail do
     describe "with invalid arguments" do
       it "should throw an exception when passing an invalid direction" do
         proc { Trail.new(@window, :direction => :invalid) }.should raise_error(Trail::InvalidDirection)
+      end
+      
+      it "should default to [] if pattern is nil" do
+        @trail = Trail.new(@window, :pattern => nil)
+        @trail.pattern.should == []
+      end
+      
+      it "should set padded_pattern to [false] if pattern is blank" do
+        @trail = Trail.new(@window, :pattern => [])
+        @trail.instance_variable_get(:@padded_pattern).should == [false]
       end
     end
   end
