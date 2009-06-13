@@ -14,3 +14,7 @@ Spec::Runner.configure do |config|
   # config.mock_with :flexmock
   config.mock_with :mocha
 end
+
+def p(obj)
+  puts obj.inspect.gsub('<', '&lt;').gsub('>', '&gt;')
+end
