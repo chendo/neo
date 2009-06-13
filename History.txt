@@ -1,4 +1,7 @@
+== 0.1.0 2009-06-14
+* Working time example
+* First implementation of the basic API
+
 == 0.0.1 2009-06-10
 
-* 1 major enhancement:
-  * Initial release
+* initial conception
