@@ -34,9 +34,10 @@ class Trail
     defaults = {
       :x => nil,
       :y => nil,
-      :speed => (2..8),
+      :speed => (2..15),
       :length => (3..10),
       :color => [0, 255, 0],
+      :highlight_color => [255, 255, 255],
       :pattern => [true],
       :direction => :down
     }
@@ -53,7 +54,7 @@ class Trail
     set_starting_position
     set_movement_deltas
     
-    @t = 100
+    @t = 20
     
     add_glyph
   end
@@ -84,7 +85,11 @@ class Trail
     @glyphs.reject! { |g| !g.visible? }
     
     return if @t > 0
-    
+
+    if @glyphs.all? { |g| g.off_screen? }
+      return @window.expire_trail(self)
+    end
+    @t = 20
     update_position
     add_glyph
   end
@@ -97,10 +102,11 @@ class Trail
   
   
   def add_glyph
-    if @glyphs.reject { |g| g.fading? }.size < @length
-      @glyphs.unshift Glyph.new(@window, self, @x, @y)
-      apply_pattern
+    if @glyphs.reject { |g| g.fading? }.size == @length
+      @glyphs[@length - 1].fading = true
     end
+    @glyphs.unshift Glyph.new(@window, self)
+    apply_pattern
   end
   
   def apply_pattern

@@ -1,24 +1,48 @@
 class Glyph
-  attr_accessor :opacity, :highlighted, :fading
-  def initialize(window, trail, x, y)
-    @x = x
-    @y = y
+  attr_accessor :opacity, :highlighted, :fading, :x, :y, :glyph, :color
+  def initialize(window, trail)
+    @x = trail.x
+    @y = trail.y
     @window = window
-    @glyph = window.glyphs[rand(window.glyphs.length)]
+    @glyph = window.glyphs.rand
     @trail = trail
-    @opacity = 255 + (@trail.speed * 3).round
-    @white = true
-    @fading = false
+    @opacity = 255
+    @color = trail.color
+    @highlight_color = trail.highlight_color
   end
   
   def draw
-    @glyph.draw(@x, @y, 1, 0.15, 0.15, Gosu::Color.new(@opacity > 255 ? 255 : @opacity, @white ? 255 : 0, 255, @white ? 255 : 0))
-    @opacity -= (1 / @trail.speed * 3).round + 2 # if @fading
-    change_glyph if rand(5) == 0
+    return if off_screen?
+    @glyph.draw(x_pixels, y_pixels, 1, scale, scale, color)
+    @opacity -= (@trail.speed) if @fading
+    change_glyph if rand(10) == 0
+  end
+
+  def x_pixels
+    @x_pixels ||= x * @window.glyph_width * @window.scale
   end
   
+  def y_pixels
+    @y_pixels ||= y * @window.glyph_height * @window.scale
+  end
+  
+  def color
+    return Gosu::Color.new(@opacity, *@highlight_color) if highlighted?
+    Gosu::Color.new(@opacity, *@color)
+  end
+  
+  def off_screen?
+    x > @window.width || x < 0 || y > @window.height || y < 0
+  end
+  
+  
+  def scale
+    @scale ||= @window.scale
+  end
+  
+  
   def visible?
-    @y < @window.height && @opacity > 0
+    @opacity > 0
   end
   
   def fading?

@@ -208,5 +208,11 @@ describe Trail do
       end
       
     end
+    
+    describe "with invalid arguments" do
+      it "should throw an exception when passing an invalid direction" do
+        proc { Trail.new(@window, :direction => :invalid) }.should raise_error(Trail::InvalidDirection)
+      end
+    end
   end
 end

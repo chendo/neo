@@ -1,6 +1,6 @@
 class Window < Gosu::Window
-  attr_accessor :glyphs, :block, :pixel_width, :pixel_height
-  def initialize(width = 800, height = 600, fullscreen = false, scale = 0.15)
+  attr_accessor :glyphs, :block, :pixel_width, :pixel_height, :glyph_width, :glyph_height, :scale
+  def initialize(width = 800, height = 600, fullscreen = false, scale = 0.10)
     super(width, height, fullscreen)
     
     
@@ -50,7 +50,7 @@ class Window < Gosu::Window
   
   
   def spawn
-    @trails << Trail.new(self)
+    @trails << Trail.new(self, :pattern => [true, false, false, true], :length => 4..15)
   end
   
   
